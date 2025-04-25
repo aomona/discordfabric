@@ -28,6 +28,7 @@ fabricApi {
 }
 
 repositories {
+    mavenCentral()
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -42,6 +43,50 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    implementation("net.dv8tion:JDA:5.4.0"){}
+    include "net.dv8tion:JDA:5.4.0"
+
+    implementation 'net.sf.trove4j:trove4j:3.0.3'
+    include 'net.sf.trove4j:trove4j:3.0.3'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    include 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    include 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    include 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
+    include 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    include 'org.slf4j:slf4j-api:2.0.9'
+
+    implementation 'com.neovisionaries:nv-websocket-client:2.14'
+    include 'com.neovisionaries:nv-websocket-client:2.14'
+
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    include 'org.apache.commons:commons-collections4:4.4'
+
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.23'
+    include 'org.jetbrains.kotlin:kotlin-stdlib:1.9.23'
+
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23'
+    include 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.23'
+
+    // Kotlinの追加依存関係
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-common:1.9.23'
+    include 'org.jetbrains.kotlin:kotlin-stdlib-common:1.9.23'
+
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23'
+    include 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.23'
+
+    implementation 'org.jetbrains:annotations:24.1.0'
+    include 'org.jetbrains:annotations:24.1.0'
+
+    implementation 'com.squareup.okio:okio:3.6.0'
+    include 'com.squareup.okio:okio:3.6.0'
+
+    implementation 'com.squareup.okio:okio-jvm:3.6.0'
+    include 'com.squareup.okio:okio-jvm:3.6.0'
 }
 
 processResources {
