@@ -24,11 +24,12 @@ public class Discordfabric implements ModInitializer {
     private JDA discordApi;
     private MinecraftServer server;
     private TextChannel discordChannel;
-
+    private int playerCount;
     @Override
     public void onInitialize() {
         // 設定を読み込む
         ModConfig.load();
+        playerCount = 0;
 
         // サーバーのインスタンスを取得するためのイベント登録
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
@@ -40,7 +41,7 @@ public class Discordfabric implements ModInitializer {
             try {
                 // Discord botを初期化して、イベントリスナーを登録
                 discordApi = JDABuilder.createDefault(ModConfig.getDiscordToken(), EnumSet.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT))
-                        .setActivity(Activity.playing("Minecraft"))
+                        .setActivity(Activity.playing("0人がプレイ中"))
                         .addEventListeners(new DiscordListener())
                         .build();
 
@@ -72,6 +73,8 @@ public class Discordfabric implements ModInitializer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             String playerName = handler.getPlayer().getName().getString();
             String playerUUID = handler.getPlayer().getUuid().toString();
+            playerCount++;
+            discordApi.getPresence().setActivity(Activity.playing(playerCount + "人がプレイ中"));
             if (discordApi != null) {
                 try {
                     // 設定からチャンネルIDを取得する想定
@@ -92,6 +95,8 @@ public class Discordfabric implements ModInitializer {
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             String playerName = handler.getPlayer().getName().getString();
             String playerUUID = handler.getPlayer().getUuid().toString();
+            playerCount--;
+            discordApi.getPresence().setActivity(Activity.playing(playerCount + "人がマインクラフト"));
             if (discordApi != null) {
                 try {
                     if (discordChannel != null) {
