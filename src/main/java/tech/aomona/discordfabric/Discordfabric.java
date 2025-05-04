@@ -1,6 +1,7 @@
 package tech.aomona.discordfabric;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -17,10 +18,8 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 
 import java.awt.*;
 import java.util.EnumSet;
-import java.util.logging.Logger;
 
 public class Discordfabric implements ModInitializer {
-    private static final Logger LOGGER = Logger.getLogger("DiscordFabric");
     private JDA discordApi;
     private MinecraftServer server;
     private TextChannel discordChannel;
@@ -32,16 +31,14 @@ public class Discordfabric implements ModInitializer {
         playerCount = 0;
 
         // サーバーのインスタンスを取得するためのイベント登録
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            this.server = server;
-        });
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> this.server = server);
 
         // トークンとチャンネルIDがあるか確認
         if (ModConfig.hasValidTokenandChannelId()) {
             try {
                 // Discord botを初期化して、イベントリスナーを登録
                 discordApi = JDABuilder.createDefault(ModConfig.getDiscordToken(), EnumSet.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT))
-                        .setActivity(Activity.playing("0人がプレイ中"))
+                        .setActivity(Activity.playing("0人"))
                         .addEventListeners(new DiscordListener())
                         .build();
 
@@ -74,7 +71,7 @@ public class Discordfabric implements ModInitializer {
             String playerName = handler.getPlayer().getName().getString();
             String playerUUID = handler.getPlayer().getUuid().toString();
             playerCount++;
-            discordApi.getPresence().setActivity(Activity.playing(playerCount + "人がプレイ中"));
+            discordApi.getPresence().setActivity(Activity.playing(playerCount + "人"));
             if (discordApi != null) {
                 try {
                     // 設定からチャンネルIDを取得する想定
@@ -82,7 +79,9 @@ public class Discordfabric implements ModInitializer {
                         EmbedBuilder embed = new EmbedBuilder();
                         embed.setAuthor(playerName+"さんが参加しました",null,"https://mc-heads.net/avatar/"+playerUUID);
                         embed.setColor(Color.GREEN); // 色を設定
-                        discordChannel.sendMessageEmbeds(embed.build()).queue();
+                        discordChannel.sendMessageEmbeds(embed.build())
+                                .setAllowedMentions(EnumSet.noneOf(Message.MentionType.class))
+                                .queue();
                     }
                 } catch (Exception e) {
                     System.out.println("Failed to send message to Discord: " + e.getMessage());
@@ -96,14 +95,16 @@ public class Discordfabric implements ModInitializer {
             String playerName = handler.getPlayer().getName().getString();
             String playerUUID = handler.getPlayer().getUuid().toString();
             playerCount--;
-            discordApi.getPresence().setActivity(Activity.playing(playerCount + "人がマインクラフト"));
+            discordApi.getPresence().setActivity(Activity.playing(playerCount + "人"));
             if (discordApi != null) {
                 try {
                     if (discordChannel != null) {
                         EmbedBuilder embed = new EmbedBuilder();
                         embed.setAuthor(playerName+"さんが退出しました",null,"https://mc-heads.net/avatar/"+playerUUID);
                         embed.setColor(Color.GRAY); // 色を設定
-                        discordChannel.sendMessageEmbeds(embed.build()).queue();
+                        discordChannel.sendMessageEmbeds(embed.build())
+                                .setAllowedMentions(EnumSet.noneOf(Message.MentionType.class))
+                                .queue();
                     }
                 } catch (Exception e) {
                     System.out.println("Failed to send message to Discord: " + e.getMessage());
@@ -142,7 +143,9 @@ public class Discordfabric implements ModInitializer {
             if (discordApi != null) {
                 try {
                     if (discordChannel != null) {
-                        discordChannel.sendMessage("**" + playerName + "**: " + content).queue();
+                        discordChannel.sendMessage("**" + playerName + "**: " + content)
+                                .setAllowedMentions(EnumSet.noneOf(Message.MentionType.class))
+                                .queue();
                     }
                 } catch (Exception e) {
                     System.out.println("Failed to send message to Discord: " + e.getMessage());
