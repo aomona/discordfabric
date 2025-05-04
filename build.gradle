@@ -148,3 +148,7 @@ publishing {
         // retrieving dependencies.
     }
 }
+
+wrapper {
+    gradleVersion = "8.13"
+}
