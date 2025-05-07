@@ -53,7 +53,7 @@ public class Discordfabric implements ModInitializer {
                 registerServerStoppedEvent();
                 if (discordChannel != null) {
                     EmbedBuilder embed = new EmbedBuilder();
-                    embed.setTitle(":heart: サーバーが起動しました");
+                    embed.setTitle(":heart: サーバーが起動しました!");
                     embed.setColor(Color.GREEN); // 色を設定
                     discordChannel.sendMessageEmbeds(embed.build()).queue();
                 }
