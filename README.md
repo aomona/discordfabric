@@ -1,2 +1,0 @@
-# discordfabric
-discordとminecraftを連携するfabricmodだよ！
